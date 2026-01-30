@@ -3069,6 +3069,9 @@
             "image": {
               "label": "Image"
             },
+            "image_mobile": {
+              "label": "Mobile image"
+            },
             "heading": {
               "label": "Heading",
               "default": "Image slide"
