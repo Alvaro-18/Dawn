@@ -129,7 +129,7 @@
   </div>
 </div>
 
-{% if request.design_mode == true %}
+
   {% javascript %}
     document.addEventListener('DOMContentLoaded', () => {
       const videos = document.querySelectorAll('.lazy-video');
@@ -169,7 +169,7 @@
       }
     });
   {% endjavascript %}
-{% endif %}
+
 
 {% schema %}
 {
