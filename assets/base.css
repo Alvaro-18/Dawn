@@ -3250,6 +3250,13 @@ details-disclosure > details {
   --zoom-in-ratio: 1;
 }
 
+.lazy-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
 .animate--zoom-in > img,
 .animate--zoom-in > .svg-wrapper,
 .animate--zoom-in > video {
