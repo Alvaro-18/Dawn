@@ -3251,7 +3251,8 @@ details-disclosure > details {
 }
 
 .animate--zoom-in > img,
-.animate--zoom-in > .svg-wrapper {
+.animate--zoom-in > .svg-wrapper,
+.animate--zoom-in > video {
   transition: scale var(--duration-short) linear;
   scale: var(--zoom-in-ratio);
 }
@@ -3260,7 +3261,8 @@ details-disclosure > details {
 
 @media (prefers-reduced-motion: no-preference) {
   .animate--ambient > img,
-  .animate--ambient > .svg-wrapper {
+  .animate--ambient > .svg-wrapper,
+  .animate--ambient > video {
     animation: animateAmbient 30s linear infinite;
   }
 

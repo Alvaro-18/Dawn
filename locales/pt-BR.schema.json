@@ -1165,6 +1165,18 @@
     "image-with-text": {
       "name": "Imagem com texto",
       "settings": {
+        "image_or_video": {
+          "label": "Imagem ou vídeo",
+          "options__1": {
+            "label": "Imagem"
+          },
+          "options__2": {
+            "label": "Vídeo"
+          },
+        },
+        "video": {
+          "label": "Vídeo"
+        },
         "image": {
           "label": "Imagem"
         },
