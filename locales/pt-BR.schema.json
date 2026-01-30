@@ -1180,6 +1180,9 @@
         "image": {
           "label": "Imagem"
         },
+        "image_mobile": {
+          "label": "Imagem em dispositivos móveis"
+        },
         "height": {
           "options__1": {
             "label": "Adaptar à imagem"

@@ -126,29 +126,66 @@
               assign height = block.settings.image.width | divided_by: block.settings.image.aspect_ratio | round
               if section.settings.image_behavior == 'ambient'
                 assign sizes = '120vw'
-                assign widths = '450, 660, 900, 1320, 1800, 2136, 2400, 3600, 7680'
+                assign mobile_widths = '450, 660, 900, 1320,' | split: ','
+                assign desktop_widths = '1320, 1800, 2136, 2400, 3600, 7680' | split: ','
               else
                 assign sizes = '100vw'
-                assign widths = '375, 550, 750, 1100, 1500, 1780, 2000, 3000, 3840'
+                assign mobile_widths = '375,550,750,1100' | split: ','
+                assign desktop_widths = '750,1100,1500,1780,2000,3000,3840' | split: ','
               endif
               assign fetch_priority = 'auto'
               if section.index == 1
                 assign fetch_priority = 'high'
               endif
             -%}
+            {% assign has_fetch_priority = false %}
+            {% assign has_lazy_loading = true %}
+
             {%- if forloop.first %}
-              {{
-                block.settings.image
-                | image_url: width: 3840
-                | image_tag: height: height, sizes: sizes, widths: widths, fetchpriority: fetch_priority
-              }}
+              {% assign has_fetch_priority = true %}
+              {% assign has_lazy_loading = false %}
             {%- else -%}
-              {{
-                block.settings.image
-                | image_url: width: 3840
-                | image_tag: loading: 'lazy', height: height, sizes: sizes, widths: widths
-              }}
+              {% assign has_fetch_priority = false %}
+              {% assign has_lazy_loading = true %}
             {%- endif -%}
+
+
+            <picture>
+              {%- if block.settings.image_mobile != blank-%}
+                {%- capture mobile_srcset -%}
+                  {%- for width in mobile_widths -%}
+                    {{ block.settings.image_mobile | image_url: width: width }} {{ width }}w{% unless forloop.last %}, {% endunless %}
+                  {%- endfor -%}
+                {%- endcapture -%}
+                <source
+                  media="(max-width: 749px)"
+                  srcset="{{ mobile_srcset | strip }}"
+                  sizes="{{ sizes }}"
+                >
+              {%- endif -%}
+
+              {%- capture desktop_srcset -%}
+                {%- for width in desktop_widths -%}
+                  {{ block.settings.image | image_url: width: width }} {{ width }}w{% unless forloop.last %}, {% endunless %}
+                {%- endfor -%}
+              {%- endcapture -%}
+              <source
+                media="(min-width: 750px)"
+                srcset="{{ desktop_srcset | strip }}"
+                sizes="{{ sizes }}"
+              >
+
+                <img
+                  src="{{ block.settings.image | image_url: width: 1500 }}"
+                  alt="{{ block.settings.image.alt | escape }}"
+                  height="{{ block.settings.image.height }}"
+                  loading="{% if has_lazy_loading %}lazy{% else %}auto{% endif %}"
+                  fetchpriority="{% if has_fetch_priority %}high{% else %}auto{% endif %}"
+                  width="{{ block.settings.image.width }}"
+                  height="{{ block.settings.image.height }}"
+                  class="full-image"
+                >
+            </picture>
           {%- else -%}
             {%- assign placeholder_slide = forloop.index | modulo: 2 -%}
             {%- if placeholder_slide == 1 -%}
@@ -396,6 +433,11 @@
           "label": "t:sections.slideshow.blocks.slide.settings.image.label"
         },
         {
+          "type": "image_picker",
+          "id": "image_mobile",
+          "label": "t:sections.slideshow.blocks.slide.settings.image_mobile.label"
+        },
+        {
           "type": "range",
           "id": "image_overlay_opacity",
           "min": 0,
@@ -452,12 +494,12 @@
         {
           "type": "header",
           "content": "t:sections.slideshow.blocks.slide.settings.header_button.content"
-        },        
+        },
         {
           "type": "text",
           "id": "button_label",
           "default": "t:sections.slideshow.blocks.slide.settings.button_label.default",
-          "label": "t:sections.slideshow.blocks.slide.settings.button_label.label", 
+          "label": "t:sections.slideshow.blocks.slide.settings.button_label.label",
           "info": "t:sections.slideshow.blocks.slide.settings.button_label.info"
         },
         {
@@ -474,7 +516,7 @@
         {
           "type": "header",
           "content": "t:sections.slideshow.blocks.slide.settings.header_layout.content"
-        },         
+        },
         {
           "type": "checkbox",
           "id": "show_text_box",
@@ -564,7 +606,7 @@
           ],
           "default": "center",
           "label": "t:sections.slideshow.blocks.slide.settings.text_alignment_mobile.label"
-        },        
+        },
         {
           "type": "color_scheme",
           "id": "color_scheme",
